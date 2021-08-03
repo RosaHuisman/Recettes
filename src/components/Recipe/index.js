@@ -2,7 +2,7 @@
 // == Import : npm
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import { Redirect, useParams } from 'react-router-dom';
 
 // == Import : local
 // Composants
@@ -16,25 +16,39 @@ import Instructions from './Instructions';
 import './style.scss';
 
 // == Composant
-function Recipe({ recipe }) {
-  if (!recipe) {
+function Recipe({ recipes }) {
+  const { slug: slugParams } = useParams();
+  const foundRecipe = recipes.find(({ slug }) => slug === slugParams);
+  // console.log(recipes);
+  // console.log(slugParams);
+  // console.log(recipe.slug);
+  if (!foundRecipe) {
     return <Redirect to="/error" />;
   }
+  // const {
+  //   title,
+  //   thumbnail,
+  //   author,
+  //   difficulty,
+  //   ingredients,
+  //   instructions,
+  // } = recipes.find(({ slug }) => slug === slugParams);
+
   return (
     <Page>
       <AppHeader />
       <div className="recipe">
         <Header
-          name={recipe.title}
-          thumbnail={recipe.thumbnail}
-          author={recipe.author}
-          difficulty={recipe.difficulty}
+          name={foundRecipe.title}
+          thumbnail={foundRecipe.thumbnail}
+          author={foundRecipe.author}
+          difficulty={foundRecipe.difficulty}
         />
         <Ingredients
-          list={recipe.ingredients}
+          list={foundRecipe.ingredients}
         />
         <Instructions
-          steps={recipe.instructions}
+          steps={foundRecipe.instructions}
         />
       </div>
     </Page>
@@ -42,19 +56,91 @@ function Recipe({ recipe }) {
 }
 
 Recipe.propTypes = {
-  recipe: PropTypes.shape({
-    title: PropTypes.string.isRequired,
-    thumbnail: PropTypes.string.isRequired,
-    author: PropTypes.string.isRequired,
-    difficulty: PropTypes.string.isRequired,
-    ingredients: PropTypes.array.isRequired,
-    instructions: PropTypes.array.isRequired,
-  }),
+  // recipe: PropTypes.shape({
+  //   title: PropTypes.string.isRequired,
+  //   thumbnail: PropTypes.string.isRequired,
+  //   author: PropTypes.string.isRequired,
+  //   difficulty: PropTypes.string.isRequired,
+  //   ingredients: PropTypes.array.isRequired,
+  //   instructions: PropTypes.array.isRequired,
+  // }),
+  recipes: PropTypes.arrayOf(
+    PropTypes.shape({
+      title: PropTypes.string.isRequired,
+      thumbnail: PropTypes.string.isRequired,
+      author: PropTypes.string.isRequired,
+      difficulty: PropTypes.string.isRequired,
+      ingredients: PropTypes.array.isRequired,
+      instructions: PropTypes.array.isRequired,
+    }),
+  ).isRequired,
 };
 
-Recipe.defaultProps = {
-  recipe: null,
-};
+// Recipe.defaultProps = {
+//   recipe: null,
+// };
 
 // == Export
 export default Recipe;
+
+
+// /* eslint-disable arrow-body-style */
+// // == Import : npm
+// import React from 'react';
+// import PropTypes from 'prop-types';
+// import { Redirect } from 'react-router-dom';
+
+// // == Import : local
+// // Composants
+// import Page from 'src/components/Page';
+// import AppHeader from 'src/components/AppHeader';
+// import Header from './Header';
+// import Ingredients from './Ingredients';
+// import Instructions from './Instructions';
+
+// // Style
+// import './style.scss';
+
+// // == Composant
+// function Recipe({ recipe }) {
+//   if (!recipe) {
+//     return <Redirect to="/error" />;
+//   }
+//   return (
+//     <Page>
+//       <AppHeader />
+//       <div className="recipe">
+//         <Header
+//           name={recipe.title}
+//           thumbnail={recipe.thumbnail}
+//           author={recipe.author}
+//           difficulty={recipe.difficulty}
+//         />
+//         <Ingredients
+//           list={recipe.ingredients}
+//         />
+//         <Instructions
+//           steps={recipe.instructions}
+//         />
+//       </div>
+//     </Page>
+//   );
+// }
+
+// Recipe.propTypes = {
+//   recipe: PropTypes.shape({
+//     title: PropTypes.string.isRequired,
+//     thumbnail: PropTypes.string.isRequired,
+//     author: PropTypes.string.isRequired,
+//     difficulty: PropTypes.string.isRequired,
+//     ingredients: PropTypes.array.isRequired,
+//     instructions: PropTypes.array.isRequired,
+//   }),
+// };
+
+// Recipe.defaultProps = {
+//   recipe: null,
+// };
+
+// // == Export
+// export default Recipe;

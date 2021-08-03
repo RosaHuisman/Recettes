@@ -5,6 +5,7 @@ import './style.scss';
 
 const Menu = ({ recipes }) => (
   <nav className="menu">
+
     <a
       className="menu-link menu-link--active"
       href="/"
