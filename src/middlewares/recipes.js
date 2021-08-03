@@ -1,51 +1,30 @@
-import { GET_RECIPES } from 'src/actions/recipes';
 import axios from 'axios';
-
-// les middlewares c'est la galère! je ne comprends pas je n'arrive pas à le faire passer dedans
-// testé plein de choses mais rien qui fonctionne
-
+import { FETCH_RECIPES, saveRecipes } from 'src/actions/recipes';
 
 const recipes = (store) => (next) => (action) => {
-  // console.log(store, action);
-  console.log('je suis ici');
+  switch (action.type) {
+    case FETCH_RECIPES: {
+      const fetchData = async () => {
+        try {
+          const response = await axios.get('http://localhost:3001/recipes');
+          // à partir de là on a notre réponse et on va pouvoir stocker les données
+          // sinon on aura une erreur et on passera dans le "catch"
+          // on va donc créer une action qui sera traiter dans le reducer
+          // pour modifier la valeur de recipes.list
+          const actionSaveRecipes = saveRecipes(response.data);
+          store.dispatch(actionSaveRecipes);
+        }
+        catch (error) {
+          console.log(error);
+        }
+      };
 
-  const state = store.getState();
-  console.log(state);
-  axios.get('http://localhost:3001/recipes', {
-    recipes: state.recipes,
-})
-    .then((response) => {
-      console.log(response);
-      store.dispatch(response);
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+      fetchData();
+      break;
+    }
+    default:
+      next(action);
+  }
 };
-
-// const recipes = (store) => (next) => (action) => {
-//   // console.log(store, action);
-//   console.log('je suis ici');
-//   switch (action.type) {
-//     case GET_RECIPES: {
-//       console.log('je suis dans le cas GET_RECIPES');
-//       const state = store.getState();
-//       console.log(state);
-//       axios.get('http://localhost:3001/recipes', {
-//         recipes: state.recipes,
-//       })
-//         .then((response) => {
-//           console.log(response);
-//           store.dispatch(response);
-//         })
-//         .catch((error) => {
-//           console.log(error);
-//         });
-//       break;
-//     }
-//     default:
-//       // next(action);
-//   }
-// };
 
 export default recipes;
